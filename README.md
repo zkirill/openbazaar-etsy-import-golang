@@ -23,7 +23,7 @@ After some time the application will display the number of successfully imported
 
 ## Mac
 
-[Mac 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/openbazaar-etsy-import-golang) (you'll need to run this using Terminal; I can make a proper Mac app later)
+[Mac 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/openbazaar-etsy-import-golang) _(you'll need to run this using Terminal; I can make a proper Mac app later)_
 
 # License
 
