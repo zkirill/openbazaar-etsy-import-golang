@@ -10,8 +10,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/zkirill/ob/openbazaar-go"
-	"github.com/zkirill/ob/row"
+	"github.com/zkirill/openbazaar-etsy-import-golang/openbazaar-go"
+	"github.com/zkirill/openbazaar-etsy-import-golang/row"
 )
 
 const (
