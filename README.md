@@ -10,7 +10,7 @@ This is an interactive utility app to import listings from Etsy to OpenBazaar.
 
 # Instructions
 
-1. Export your data from Etsy and rename the exported file to `listings.csv`.
+1. Export your data from Etsy to a CSV file.
 1. Download the app from one of the links below, selecting the link that is appropriate for your computer's operating system.
 1. Make sure that OpenBazaar local server is running.
 1. Start the import app (on Mac you need to use the Terminal). Your browser will automatically open the user interface.
