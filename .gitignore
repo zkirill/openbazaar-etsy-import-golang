@@ -22,4 +22,5 @@ _testmain.go
 *.exe
 *.test
 *.prof
-openbazaar-etsy-import-golang
+import_etsy_ob_darwin
+*.swp
