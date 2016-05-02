@@ -37,7 +37,7 @@ func Client(username string, password string) (client *http.Client, err error) {
 	}
 	err = Login(client, username, password)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return client, nil
 }
