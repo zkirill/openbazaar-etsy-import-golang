@@ -3,27 +3,28 @@
 # Import to OpenBazaar from Etsy
 
 # Overview
+
 This is an interactive utility app to import listings from Etsy to OpenBazaar.
+
+![import home page][logo]
 
 # Instructions
 
+1. Export your data from Etsy and rename the exported file to `listings.csv`.
 1. Download the app from one of the links below, selecting the link that is appropriate for your computer's operating system.
-2. Export your data from Etsy and rename the exported file to `listings.csv`.
-3. Put the downloaded app file and `listings.csv` into the same directory.
-4. Make sure that OpenBazaar local server is running.
-4. Run the downloaded app file. You will be asked for your OpenBazaar credentials before the import process begins.
- 
-After some time the application will display the number of successfully imported items or any errors that were encountered during the import.
+1. Make sure that OpenBazaar local server is running.
+1. Start the import app (on Mac you need to use the Terminal). Your browser will automatically open the user interface.
+1. Follow the instructions in the new browser window that opens.
 
 ## Windows
 
-[Windows 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/openbazaar-etsy-import-golang-amd64.exe)
+[Windows 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/import_etsy_ob_windows_amd64.exe)
 
-[Windows 32-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/openbazaar-etsy-import-golang-i386.exe)
+[Windows 32-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/import_etsy_ob_windows.exe)
 
 ## Mac
 
-[Mac 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/openbazaar-etsy-import-golang) _(you'll need to run this using Terminal; I can make a proper Mac app later)_
+[Mac 64-bit](https://github.com/zkirill/openbazaar-etsy-import-golang/releases/download/v0.0.1-alpha/import_etsy_ob_darwin) _(you'll need to run this using Terminal; I can make a proper Mac app later)_
 
 # License
 
@@ -48,3 +49,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+[logo]: https://raw.githubusercontent.com/zkirill/openbazaar-etsy-import-golang/master/screenshots/home.png "Home page"
