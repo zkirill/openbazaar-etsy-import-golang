@@ -1,16 +1,35 @@
 package openbazaar
 
 import (
+	"bytes"
+	"encoding/base64"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+
+	"github.com/zkirill/openbazaar-etsy-import-golang/row"
+)
+
+var (
+	// ImportListingsParsed is the number of parsed listings.
+	ImportListingsParsed int
+	// ImportFinished is true when import has finished.
+	ImportFinished bool
+	// ImportFailed is true when when import has failed.
+	ImportFailed bool
 )
 
 const (
 	api = "http://localhost:18469/api/v1"
+	// Maximum number of keywords per listing.
+	maxKeywords = 10
 )
 
 // Contract represents an OpenBazaar contract.
@@ -22,6 +41,7 @@ type Contract struct {
 	Description    string
 	CurrencyCode   string
 	ShippingOrigin string
+	ShipsTo        []string
 }
 
 // Response represents the response from OpenBazaar server.
@@ -92,6 +112,13 @@ func UploadImage(client *http.Client, img string) (hash string, err error) {
 
 // PostContract posts a contract to OpenBazaar local server.
 func PostContract(client *http.Client, contract Contract) error {
+	// Represents the contract post response from OpenBazaar server.
+	type response struct {
+		// Success represents the result of the upload.
+		Success bool `json:"success"`
+		// Reason contains the error message in the event of an error.
+		Reason string `json:"reason"`
+	}
 	v := url.Values{
 		"title":                  {contract.Title},
 		"expiration_date":        {""},
@@ -114,11 +141,16 @@ func PostContract(client *http.Client, contract Contract) error {
 		"shipping_origin":        {contract.ShippingOrigin},
 	}
 	// Add keywords.
-	for _, k := range contract.Tags {
-		v.Add("keywords", k)
+	for idx, kw := range contract.Tags {
+		if idx >= maxKeywords {
+			break
+		}
+		v.Add("keywords", kw)
 	}
 	// Add shipping destinations.
-	v.Add("ships_to", "all")
+	for _, sd := range contract.ShipsTo {
+		v.Add("ships_to", sd)
+	}
 	resp, err := client.PostForm(api+"/contracts", v)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -129,7 +161,105 @@ func PostContract(client *http.Client, contract Contract) error {
 	var r response
 	dec.Decode(&r)
 	if !r.Success {
-		return errors.New("Failed to post contract: " + contract.Title)
+		return errors.New("Failed to post contract: " + r.Reason)
 	}
 	return nil
+}
+
+// Import imports data into OpenBazaar.
+func Import(username string, password string, shipOrigin string, listings []byte) {
+	client, err := Client(username, password)
+
+	if err != nil {
+		log.Fatal(err)
+		ImportFailed = true
+	}
+
+	r := csv.NewReader(bytes.NewReader(listings))
+
+	// Rows created from parsing the CSV file.
+	var rows []row.Row
+
+	// Have the headers been parsed?
+	var parsedHeaders bool
+
+	// Parse each CSV row. Skip the headers.
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			msg := fmt.Sprintf("Parsed %d rows.", len(rows))
+			log.Println(msg)
+			ImportFailed = true
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+			ImportFailed = true
+		}
+
+		// Check if this is the first row, which we skip.
+		if !parsedHeaders {
+			parsedHeaders = true
+			continue
+		}
+		row, err := row.Parse(record)
+		if err != nil {
+			log.Println("Error parsing CSV row: " + err.Error())
+			ImportFailed = true
+			break
+		}
+		rows = append(rows, row)
+	}
+
+	// Create OB contracts.
+	for _, row := range rows {
+		c := Contract{
+			Title:          row.Title,
+			Image:          row.Image,
+			Price:          row.Price,
+			Description:    row.Description,
+			Tags:           row.Tags,
+			CurrencyCode:   row.CurrencyCode,
+			ShippingOrigin: shipOrigin,
+			ShipsTo:        []string{"all"},
+		}
+		// Get the image.
+		resp, err := http.Get(row.Image)
+		if err != nil {
+			log.Println("Error downloading listing image: " + err.Error())
+			ImportFailed = true
+			break
+		}
+		buffer, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Println("Error downloading listing image: " + err.Error())
+			ImportFailed = true
+			break
+		}
+		err = resp.Body.Close()
+
+		if err != nil {
+			log.Println("Error downloading listing image: " + err.Error())
+			ImportFailed = true
+			break
+		}
+
+		// Encode image to base64.
+		img := base64.StdEncoding.EncodeToString(buffer)
+		// Upload image to OB and get image hash back.
+		c.Image, err = UploadImage(client, img)
+		if err != nil {
+			log.Println("Error downloading listing image: " + err.Error())
+			ImportFailed = true
+			break
+		}
+		err = PostContract(client, c)
+		if err != nil {
+			log.Println("Error uploading contract: " + err.Error())
+			ImportFailed = true
+			break
+		}
+		ImportListingsParsed++
+	}
+	ImportFinished = true
 }

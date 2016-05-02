@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Import to OpenBazaar</title>
+    <meta name="author" content="Kirill Zdornyy">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style="margin-top: 5rem">
+        <div class="twelve columns" style="text-align: center">
+          <h1>Import to OpenBazaar</h1>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 5rem">
+        <div class="one-half column">
+          <div class="row">
+            <form id="gen-form" enctype="multipart/form-data" action="/import" method="POST">
+              <div class="twelve columns">
+                <label for="username">Your OpenBazaar username:</label>
+                <input class="u-full-width" type="text" placeholder="username" id="username" name="username">
+                <p>This is your OpenBazaar username.</p>
+                <label for="password">Your OpenBazaar password:</label>
+                <input class="u-full-width" type="password" placeholder="password" id="password" name="password">
+                <p>This is your OpenBazaar password.</p>
+                <label for="origin">Shipping origin:</label>
+                <input class="u-full-width" type="text" placeholder="origin" id="origin" name="origin">
+                <p>This is your shipping origin. Defaults to ALL.</p>
+                <label for="file">Your exported Etsy listings:</label>
+                <input type='file' name='listings'>
+                <p>This is the CSV file that contains your exported Etsy listings.</p>
+                <hr>
+              </div>
+              <input class="button-primary" type="submit" value="Import">
+            </form>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>

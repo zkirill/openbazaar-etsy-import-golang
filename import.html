@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Import to OpenBazaar</title>
+    <meta name="author" content="Kirill Zdornyy">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script>
+      var i = setInterval(function(){
+        $.get( "/status", function(data) {
+          if (data.finished === false) {
+            $("#result").html("Imported " + data.count + " listings.");
+          } else {
+            if (data.success === true) {
+              $("#result").html("Successfully imported " + data.count + " listings!");
+            } else {
+              $("#result").html("Failed to import listings. Please check the console for errors.");
+            }
+            clearInterval(i);
+          }
+        }); 
+      }, 1000);
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style="margin-top: 5rem">
+        <div class="one-half column">
+          <h1>Import to OpenBazaar</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="one-half column">
+          <h4>Import status</h4>
+          <p id="result"></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
