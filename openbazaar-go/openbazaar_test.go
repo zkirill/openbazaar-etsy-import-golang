@@ -41,6 +41,7 @@ func TestContract(t *testing.T) {
 		Description:    "Test Description",
 		ShippingOrigin: "ALL",
 		CurrencyCode:   "USD",
+		ShipsTo:        []string{"all"},
 	}
 	err := PostContract(client, contract)
 	if err != nil {
